@@ -1,0 +1,146 @@
+version: 2
+
+models:
+  - name: stg_olist__orders
+    description: "one row per order"
+    columns:
+      - name: order_id
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        data_type: varchar
+        description: "different for every order. real customer is customer_unique_id"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_olist__customers')
+                field: customer_id
+
+      - name: order_status
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'created', 'approved']
+
+      - name: estimated_delivery_date
+        data_type: date
+        description: "no time in the data, only date"
+
+  - name: stg_olist__customers
+    description: "one row per customer_id"
+    columns:
+      - name: customer_id
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_unique_id_hash
+        data_type: varchar
+        description: "hashed, this is personal data"
+        data_tests:
+          - not_null
+
+      - name: zip_code_prefix
+        data_type: varchar
+        description: "text not number, some start with 0"
+
+  - name: stg_olist__order_items
+    description: "one row per item. order_id + order_item_number is unique"
+    columns:
+      - name: order_id
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_olist__orders')
+                field: order_id
+
+      - name: order_item_number
+        data_type: number
+        description: "item number inside the order"
+
+      - name: seller_id
+        data_type: varchar
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_olist__sellers')
+                field: seller_id
+
+      - name: price
+        data_type: number
+        data_tests:
+          - not_null
+
+  - name: stg_olist__order_payments
+    description: "one row per payment. some orders are paid in parts"
+    columns:
+      - name: order_id
+        data_type: varchar
+        data_tests:
+          - not_null
+
+  - name: stg_olist__order_reviews
+    description: "one review can be for more orders. 547 orders have more than one review"
+    columns:
+      - name: order_id
+        data_type: varchar
+        data_tests:
+          - not_null
+
+      - name: review_score
+        data_type: number
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+
+      - name: review_answered_at
+        data_type: timestamp_ntz
+        description: "we use it to take the last review"
+
+  - name: stg_olist__products
+    description: "one row per product"
+    columns:
+      - name: product_id
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+      - name: category_name
+        data_type: varchar
+        description: "portuguese. 610 products without category"
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+
+  - name: stg_olist__sellers
+    description: "one row per seller. 7 sellers have zip that is not in geolocation"
+    columns:
+      - name: seller_id
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_olist__geolocation
+    description: "many rows for one zip. do not join without group by first"
+
+  - name: stg_olist__category_translation
+    description: "one row per category. 2 categories have no english name"
+    columns:
+      - name: category_name
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
