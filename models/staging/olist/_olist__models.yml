@@ -2,7 +2,13 @@ version: 2
 
 models:
   - name: stg_olist__orders
-    description: "one row per order"
+    description: "one row per item. order_id + order_item_id is unique"
+    data_tests:
+      - dbt.utils.unique_combination_of_columns:
+          arguments: 
+            combination_of_columns:
+              - order_id
+              - order_item_number
     columns:
       - name: order_id
         data_type: varchar
@@ -89,6 +95,12 @@ models:
 
   - name: stg_olist__order_reviews
     description: "one review can be for more orders. 547 orders have more than one review"
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: 
+            combination_of_columns:
+              - review_id
+              - order_id
     columns:
       - name: order_id
         data_type: varchar
