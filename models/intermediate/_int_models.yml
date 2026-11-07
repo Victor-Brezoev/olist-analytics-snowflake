@@ -1,0 +1,25 @@
+
+version: 2
+
+models:
+  - name: int_order_payments
+    description: "order per row, vouchers are separated"
+    columns:
+      - name: order_id
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+          
+      - name: total_payment
+        data_type: number
+        data_tests:
+          - not_null
+  - name: int_order_reviews_last_review
+    description: "one row per order, only the last review"
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null   
+
