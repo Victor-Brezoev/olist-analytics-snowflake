@@ -1,0 +1,149 @@
+
+version: 2
+
+models:
+  - name: dim_customers
+    description: "one row per customer. addres is last order adress"
+    columns:
+      - name: customer_unique_id_hash
+        data_type: varchar
+        description: "hashed id of the real customer - key"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: zip_code_prefix
+        data_type: varchar
+        description: "zip last order"
+
+      - name: city
+        data_type: varchar
+        description: "city from last order"
+
+      - name: state
+        data_type: varchar
+        description: "state from last order"
+
+      - name: first_order
+        data_type: timestamp_ntz
+        description: "first customer's order"
+        data_tests:
+          - not_null
+
+      - name: last_order
+        data_type: timestamp_ntz
+        description: "last customer's order"
+        data_tests:
+          - not_null
+
+      - name: total_orders
+        data_type: number
+        description: "sum of orders"
+        data_tests:
+          - not_null
+
+  - name: dim_products
+    description: "one row per product"
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "key"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: category_name
+        data_type: varchar
+        description: "category in portuguese"
+
+      - name: category_english_name
+        data_type: varchar
+        description: "category in translated to english"
+        data_tests:
+          - not_null
+
+      - name: weight_g
+        data_type: number
+        description: "weight in grams"
+
+      - name: length_cm
+        data_type: number
+        description: "length in cm"
+
+      - name: height_cm
+        data_type: number
+        description: "height in cm"
+
+      - name: width_cm
+        data_type: number
+        description: "width in cm"
+
+      - name: volume_cm3
+        data_type: number
+        description: "length x height x width"
+
+      - name: photos_count
+        data_type: number
+        description: "number of photos"
+
+  - name: dim_sellers
+    description: "one row per selles"
+    columns:
+      - name: seller_id
+        data_type: varchar
+        description: "table key"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: zip_code_prefix
+        data_type: varchar
+        description: "zip code of the seller"
+
+      - name: city
+        data_type: varchar
+        description: "seller's city"
+
+      - name: state
+        data_type: varchar
+        description: "selller's state"
+        data_tests:
+          - not_null
+
+  - name: dim_date
+    description: "one row per day"
+    columns:
+      - name: date_day
+        data_type: date
+        description: "the date. key of the table"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: year
+        data_type: number
+        description: "year"
+
+      - name: quarter
+        data_type: number
+        description: "quarter (1-4)"
+
+      - name: month
+        data_type: number
+        description: "month number (1-12)"
+
+      - name: month_name
+        data_type: varchar
+        description: "short month name (Jan, Feb...)"
+
+      - name: day_of_week
+        data_type: number
+        description: "1 = monday, 7 = sunday (iso)"
+
+      - name: day_name
+        data_type: varchar
+        description: "short day name (Mon, Tue...)"
+
+      - name: is_weekend
+        data_type: boolean
+        description: "true for saturday and sunday"
