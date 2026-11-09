@@ -147,3 +147,41 @@ models:
       - name: is_weekend
         data_type: boolean
         description: "true for saturday and sunday"
+
+  - name: fct_orders
+    description: one row per order, incremental
+    columns:
+      - name: order_id
+        description: one row per order
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_unique_id_hash
+        description: link to dim_customers
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_unique_id_hash
+      - name: order_date
+        description: link to dim_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: net_revenue
+        description: price + freight, 0 for canceled and unavailable
+        data_tests:
+          - not_null
+      - name: review_score
+        description: score from last review, null if no review
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+                quote: false
+      - name: is_late
+        description: delivered after estimated date, null if not delivered

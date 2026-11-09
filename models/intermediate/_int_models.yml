@@ -23,3 +23,22 @@ models:
           - unique
           - not_null   
 
+  - name: int_order_items
+    description: order items grouped by order
+    columns:
+      - name: order_id
+        description: one row per order
+        data_tests:
+          - unique
+          - not_null
+      - name: items_count
+        description: number of items in the order
+      - name: product_revenue
+        description: sum of item prices
+        data_tests:
+          - not_null
+      - name: freight_revenue
+        description: sum of freight
+        data_tests:
+          - not_null
+

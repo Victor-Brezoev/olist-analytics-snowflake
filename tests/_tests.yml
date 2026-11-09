@@ -1,0 +1,8 @@
+data_tests:
+  - name: delivery_after_purchase
+    description: delivery must be made after purchase
+  
+  - name: delivered_orders_date
+    description: deliveries must have date. 8 don't
+    config: 
+      severity: warn
