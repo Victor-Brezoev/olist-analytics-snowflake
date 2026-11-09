@@ -185,3 +185,52 @@ models:
                 quote: false
       - name: is_late
         description: delivered after estimated date, null if not delivered
+
+  - name: fct_order_items
+    description: one row per order item
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - order_id
+              - order_item_number
+    columns:
+      - name: order_id
+        description: link to fct_orders
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+      - name: product_id
+        description: link to dim_products
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+      - name: seller_id
+        description: link to dim_sellers
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_sellers')
+                field: seller_id
+      - name: customer_unique_id_hash
+        description: link to dim_customers
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_unique_id_hash
+      - name: order_date
+        description: link to dim_date
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: net_revenue
+        description: price + freight, 0 for canceled and unavailable
+        data_tests:
+          - not_null
