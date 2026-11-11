@@ -87,6 +87,12 @@ models:
 
   - name: stg_olist__order_payments
     description: "one row per payment. some orders are paid in parts"
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - order_id
+              - payment_number
     columns:
       - name: order_id
         data_type: varchar

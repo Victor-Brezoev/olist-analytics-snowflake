@@ -9,7 +9,7 @@ source as (
 renamed as (
 
     select
-  order_id,
+        order_id,
         cast(payment_sequential as integer)   as payment_number,
         payment_type,
         cast(payment_installments as integer) as installments,
