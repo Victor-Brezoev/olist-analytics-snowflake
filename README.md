@@ -61,4 +61,4 @@ every pr runs the changed models and their tests in dbt cloud. merge to main run
 
 reads from `analytics.prod_marts`. the .pbit file is a template without data.
 
-![dashboard](powerbi/dashboard.png)
+![dashboard](power_bi/Screenshot%20olist-analytics-snowflake-bi.png)
